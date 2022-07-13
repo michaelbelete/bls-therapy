@@ -1,18 +1,9 @@
-# create-svelte
+# BLS Therapy
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Bilateral Stimulation (BLS) simply means stimulation of both sides, as in both sides of the brain. In EMDR Therapy we use this method to assist the client in processing traumatic memories, and in processing fears or worries of future problems. BLS is used to activate or ‘awaken’ the whole brain, similar to the function of  ‘Rapid Eye Movement’ (REM) sleep patterns. Bilateral Stimulation is believed to facilitate the process of the re-filing of memories into a more efficient and useful place in the brain and body. There are basically two theories of why BLS, in particular left to right, or vertical to horizontal eye movements, is beneficial to the client’s ability to process disturbing memories. One is the ‘working memory’ theory, and the other is the idea that BLS increases ‘interhemispheric communication.
 
-## Creating a project
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm init svelte
-
-# create a new project in my-app
-npm init svelte my-app
-```
+Everything you need to build a this project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
 
 ## Developing
 
