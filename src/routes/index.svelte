@@ -1,1 +1,4 @@
-<h1 class="text-3xl font-bold underline">Hello world!</h1>
+<main class="text-lg border flex flex-col gap-2">
+    <a href="/client">Client</a>
+    <a href="/therapist">therapist</a>
+</main>
