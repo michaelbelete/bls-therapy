@@ -1,14 +1,17 @@
 <script>
+
+	import sessionStore from '$lib/sessionStore';
+	import sessionValue from '$lib/getSessionValue';
+
+	console.log(sessionValue);
+
 	let isBouncing = false;
 	const toggleBouncing = () => {
 		isBouncing = !isBouncing;
 	};
-
 	let bgColor = '#ef4444';
 	let speed = 2;
 	$: animationSpeed = (10.5-speed) + 's';
-
-	$: console.log(animationSpeed)
 </script>
 
 <div>
