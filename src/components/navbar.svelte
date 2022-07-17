@@ -12,7 +12,7 @@
 				<TiArrowLeftThick />
 			</a>
 		{:else}
-            <h2>BLS Therapy</h2>
+            <h2 class="text-xl font-bold">BLS Therapy</h2>
         {/if}
 	</div>
 	<div class="flex-none" />
