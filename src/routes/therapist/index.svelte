@@ -1,14 +1,12 @@
 <script>
 	import socket from '$lib/socket';
 	import { goto } from '$app/navigation';
-	import { sessionStore } from '../../store/session';
-	import sessionValue from '$lib/getSessionValue';
 
+	import NavBar from '../../components/navbar.svelte';
 
 	const createSession = () => {
 		socket.emit('create session');
 		socket.on('create session', (session) => {
-			sessionStore.set(session);
 			goto(`/therapist/session/${session.sessionId}`);
 		});
 	};
@@ -17,6 +15,18 @@
 <svelte:head>
 	<title>Therapist - Create Session</title>
 </svelte:head>
-
-<h1>Create session</h1>
-<button on:click={createSession} class="bg-red-800 px-10 py-10 rounded-full">Create</button>
+<main>
+	<NavBar goBack={true} goBackLink="/" />
+	<div class="flex flex-col items-center pt-52 px-10 h-screen">
+		<div class="flex flex-col gap-10">
+			<div class="flex flex-col gap-5">
+				<h2 class="text-3xl">Welcome, Therapist</h2>
+				<h4 class="text-lg w-3/4">
+					Your are one step away from creating a new session. click the create session button to
+					continue
+				</h4>
+			</div>
+			<button on:click={createSession} class="btn btn-dark">Create a new session</button>
+		</div>
+	</div>
+</main>

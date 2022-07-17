@@ -4,8 +4,6 @@
 	import socket from '$lib/socket';
 	import { page } from '$app/stores';
 
-	import TiArrowLeftThick from 'svelte-icons/ti/TiArrowLeftThick.svelte';
-
 	const sessionId = $page.params.id;
 
 	let sessionValue;
@@ -21,7 +19,7 @@
 				bgColor = session.config.bgColor;
 				speed = session.config.speed;
 			} else {
-				goto('/therapist');
+				goto('/client');
 			}
 		});
 

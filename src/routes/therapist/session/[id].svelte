@@ -1,13 +1,14 @@
 <script>
-	import CopyToClipboard from 'svelte-copy-to-clipboard';
-
+	
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import socket from '$lib/socket';
 	import { page } from '$app/stores';
+	
+	import NavBar from "../../../components/navbar.svelte";
+	import CopyToClipboard from 'svelte-copy-to-clipboard';
 
 	//icons
-	import TiArrowLeftThick from 'svelte-icons/ti/TiArrowLeftThick.svelte';
 	import IoMdClipboard from 'svelte-icons/io/IoMdClipboard.svelte';
 
 	const sessionId = $page.params.id;
@@ -75,17 +76,9 @@
 
 <div>
 	{#if sessionValue}
-		<div class="navbar bg-base-100 shadow">
-			<div class="flex-1 pl-5">
-				<a href="/therapist" class="btn w-12 text-white h-12 bg-gray-700 rounded-full p-2">
-					<TiArrowLeftThick />
-				</a>
-			</div>
-			<div class="flex-none" />
-		</div>
-
+		<NavBar goBack={true} goBackLink="/therapist" />
 		<main
-			class="w-full h-64 flex items-center {sessionValue.config.isBouncing
+			class="w-full h-56 flex items-center {sessionValue.config.isBouncing
 				? ''
 				: 'justify-center'} bg-gray-1000"
 			style="--bg-color: {sessionValue.config.bgColor}; --animation-speed:{animationSpeed};"
@@ -123,7 +116,21 @@
 					/>
 				</div>
 			</div>
-			<div class="flex flex-col items-center gap-10 justify-center mt-10">
+			<div class="flex flex-col items-center gap-2 justify-center mt-7">
+				<div class="flex flex-row justify-between items-center border-2 text-2xl input w-2/5">
+					<p>{sessionId}</p>
+					<CopyToClipboard
+						text={sessionId}
+						let:copy
+						on:copy={handleSuccessfullyCopied}
+						on:fail={handleFailedCopy}
+					>
+						<button class="text-gray-600 w-8 h-8" on:click={copy}>
+							<IoMdClipboard />
+						</button>
+					</CopyToClipboard>
+				</div>
+				<h2 class="text-xl">or</h2>
 				<div class="flex flex-row justify-between items-center border-2 gap-2 input w-2/5">
 					<p>{link}</p>
 					<CopyToClipboard
@@ -137,8 +144,7 @@
 						</button>
 					</CopyToClipboard>
 				</div>
-
-				<button on:click={terminateSession} class="btn btn-dark mb-20">Terminate</button>
+				<button on:click={terminateSession} class="btn btn-dark mt-3">Terminate</button>
 			</div>
 		</div>
 	{:else}
