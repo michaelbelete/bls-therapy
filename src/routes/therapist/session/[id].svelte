@@ -1,4 +1,6 @@
 <script>
+	import CopyToClipboard from 'svelte-copy-to-clipboard';
+
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import socket from '$lib/socket';
@@ -13,7 +15,9 @@
 	let sessionValue;
 	let bgColor;
 	let speed;
+	let link = 'http://localhost:3000/client/session/' + sessionId;
 	let counter = 0;
+
 	$: animationSpeed = 11 - speed + 's';
 
 	const getSession = () => {
@@ -53,6 +57,14 @@
 		sessionStore.set(null);
 		goto('/therapist/');
 	};
+
+	const handleSuccessfullyCopied = (e) => {
+		alert('Copied');
+	};
+
+	const handleFailedCopy = () => {
+		alert('failed to copy :(');
+	};
 </script>
 
 <svelte:head>
@@ -81,19 +93,15 @@
 		<div class="w-full h-full p-10 rounded-tl-2xl rounded-tr-2xl bg-base-200">
 			<div class="flex flex-row gap-28 justify-evenly">
 				<div class="flex flex-col gap-2">
-					<label class="label-text">
-						Start/Stop
-					</label>
+					<label class="label-text"> Start/Stop </label>
 					<input
 						type="checkbox"
 						class="toggle"
 						checked={sessionValue.config.isBouncing ? true : false}
 						on:change={() => toggleBouncing(sessionValue.config)}
 					/>
-					<br/>
-					<label class="label-text">
-						Change Color
-					</label>
+					<br />
+					<label class="label-text"> Change Color </label>
 					<input
 						type="color"
 						class="w-28 h-10 rounded-xl"
@@ -115,10 +123,17 @@
 			</div>
 			<div class="flex flex-col items-center gap-10 justify-center mt-10">
 				<div class="flex flex-row justify-between items-center border-2 gap-2 input w-2/5">
-					<p>{`http://localhost:3000/client/session/${sessionId}`}</p>
-					<button class="text-gray-600 w-8 h-8">
-						<IoMdClipboard />
-					</button>
+					<p>{link}</p>
+					<CopyToClipboard
+						text={link}
+						let:copy
+						on:copy={handleSuccessfullyCopied}
+						on:fail={handleFailedCopy}
+					>
+						<button class="text-gray-600 w-8 h-8" on:click={copy}>
+							<IoMdClipboard />
+						</button>
+					</CopyToClipboard>
 				</div>
 
 				<button on:click={terminateSession} class="btn btn-dark mb-20">Terminate</button>
