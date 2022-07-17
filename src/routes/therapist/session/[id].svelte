@@ -1,45 +1,93 @@
 <script>
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import socket from '$lib/socket';
+	import { page } from '$app/stores';
 
-	import sessionStore from '$lib/sessionStore';
-	import sessionValue from '$lib/getSessionValue';
+	const sessionId = $page.params.id;
 
-	console.log(sessionValue);
+	let sessionValue;
+	let bgColor;
+	let speed;
+	$: animationSpeed = (10.5 - speed) + 's';
 
-	let isBouncing = false;
-	const toggleBouncing = () => {
-		isBouncing = !isBouncing;
+	$: console.log(animationSpeed);
+	const getSession = () => {
+		socket.emit('get session', sessionId);
+		socket.on('get session', (session) => {
+			if (session) {
+				sessionValue = session;
+				bgColor = session.config.bgColor;
+				speed = session.config.speed;
+			} else {
+				goto('/therapist');
+			}
+		});
+	}
+
+	onMount(() => getSession());
+
+	const toggleBouncing = (config) => {
+		const newConfig = {...config, isBouncing: !config.isBouncing}
+		socket.emit('set config', { sessionId: sessionId, config: newConfig });
+		getSession();	
 	};
-	let bgColor = '#ef4444';
-	let speed = 2;
-	$: animationSpeed = (10.5-speed) + 's';
+
+	const changeColor = (config) => {
+		const newConfig = {...config, bgColor: bgColor};
+		socket.emit('set config', { sessionId: sessionId, config: newConfig });
+		getSession();	
+	};
+
+	const changeSpeed = (config) => {
+		const newConfig = {...config, speed: speed};
+		socket.emit('set config', { sessionId: sessionId, config: newConfig });
+		getSession();	
+	}
+	
+	const terminateSession = () => {
+		sessionStore.set(null);
+		goto('/therapist/');
+	};
 </script>
 
 <div>
-	<main class="w-full h-52 flex items-center {isBouncing ? '' : 'justify-center'} bg-gray-1000" style="--bg-color: {bgColor}; --animation-speed:{animationSpeed}">
-		<div
-			class="{isBouncing ? 'bounce' : ''} ball w-20 h-20 rounded-full"
-		/>
-	</main>
-	<p>Start/Stop</p>
-	<button type="submit" on:click={toggleBouncing} class="bg-green-300"
-		>{isBouncing ? 'Stop' : 'Start'}</button
-	>
-	<p>Change Color</p>
-	<input type="color" bind:value={bgColor} />
-	<p>Set Speed</p>
-	<div class="flex flex-row gap-4">
-		<input type="range" bind:value={speed} min="1" max="10" />
-	</div>
-	<p>Share link: http://www.blm.io/session</p>
+	{#if sessionValue}
+		{console.log(sessionValue.config)}
+		<main
+			class="w-full h-52 flex items-center {sessionValue.config.isBouncing
+				? ''
+				: 'justify-center'} bg-gray-1000"
+			style="--bg-color: {sessionValue.config.bgColor}; --animation-speed:{animationSpeed};"
+		>
+			<div class="{sessionValue.config.isBouncing ? 'bounce' : ''} ball w-20 h-20 rounded-full" />
+		</main>
+		<p>Start/Stop</p>
+		<button
+			type="submit"
+			on:click={() => toggleBouncing(sessionValue.config)}
+			class="bg-green-300">{sessionValue.config.isBouncing ? 'Stop' : 'Start'}</button
+		>
+		<p>Change Color</p>
+		<input type="color" bind:value={bgColor} on:change={() => changeColor(sessionValue.config)}  />
+		<p>Set Speed</p>
+		<div class="flex flex-row gap-4">
+			<input type="range" min="1" max="10" bind:value={speed} on:change={() => changeSpeed(sessionValue.config)} />
+		</div>
+		<p>Share link: http://www.blm.io/session</p>
+		<button on:click={terminateSession}>Terminate</button>
+	{:else}
+		<p>Loading...</p>
+	{/if}
 </div>
 
 <style>
 	.ball {
-		animation: bounce;
-		animation-duration: var(--animation-speed);
-		background: radial-gradient(circle at 30% 30%, var(--bg-color), #774400);
+		background: radial-gradient(circle at 30% 30%, var(--bg-color), #33230f);
 	}
 	.bounce {
+		animation: bounce;
+		animation-duration: var(--animation-speed);
 		animation-direction: alternate;
 		animation-timing-function: cubic-bezier(0.5, 0.5, 0.5, 0.5);
 		animation-iteration-count: infinite;

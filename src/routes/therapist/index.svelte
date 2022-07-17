@@ -4,14 +4,17 @@
 	import { sessionStore } from '../../store/session';
 	import sessionValue from '$lib/getSessionValue';
 
+	// if (sessionValue) {
+	// 	goto(`/therapist/session/${sessionValue.sessionId}`);
+	// }
+
 	const createSession = () => {
 		socket.emit('create session');
 		socket.on('create session', (session) => {
 			sessionStore.set(session);
-      goto(`/therapist/session/${session.sessionId}`);
+			goto(`/therapist/session/${session.sessionId}`);
 		});
 	};
-
 </script>
 
 <svelte:head>
