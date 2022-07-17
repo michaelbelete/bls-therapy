@@ -9,9 +9,9 @@
 	let sessionValue;
 	let bgColor;
 	let speed;
-	$: animationSpeed = (10.5 - speed) + 's';
+	let counter = 0;
+	$: animationSpeed = (11 - speed) + 's';
 
-	$: console.log(animationSpeed);
 	const getSession = () => {
 		socket.emit('get session', sessionId);
 		socket.on('get session', (session) => {
@@ -53,7 +53,6 @@
 
 <div>
 	{#if sessionValue}
-		{console.log(sessionValue.config)}
 		<main
 			class="w-full h-52 flex items-center {sessionValue.config.isBouncing
 				? ''
@@ -74,7 +73,9 @@
 		<div class="flex flex-row gap-4">
 			<input type="range" min="1" max="10" bind:value={speed} on:change={() => changeSpeed(sessionValue.config)} />
 		</div>
-		<p>Share link: http://www.blm.io/session</p>
+		<p>Share link: {`http://localhost:3000/client/session/${sessionId}`} <em>Copy</em></p>
+
+		
 		<button on:click={terminateSession}>Terminate</button>
 	{:else}
 		<p>Loading...</p>
