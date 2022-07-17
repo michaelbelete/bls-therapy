@@ -54,8 +54,10 @@
 	};
 
 	const terminateSession = () => {
-		sessionStore.set(null);
-		goto('/therapist/');
+		socket.emit('terminate session', sessionId);
+		socket.on('terminate session', () => {
+			goto('/therapist/');
+		})
 	};
 
 	const handleSuccessfullyCopied = (e) => {

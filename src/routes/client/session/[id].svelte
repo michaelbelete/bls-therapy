@@ -24,6 +24,10 @@
 				goto('/therapist');
 			}
 		});
+
+		socket.on('terminate session', () => {
+			goto('/client/');
+		});
 	};
 
 	onMount(() => getSession());
