@@ -4,12 +4,14 @@
 	import socket from '$lib/socket';
 	import { page } from '$app/stores';
 
+	import TiArrowLeftThick from 'svelte-icons/ti/TiArrowLeftThick.svelte';
+
 	const sessionId = $page.params.id;
 
 	let sessionValue;
 	let bgColor;
 	let speed;
-    $: animationSpeed = 10.5 - speed + 's';
+	$: animationSpeed = 10.5 - speed + 's';
 
 	const getSession = () => {
 		socket.emit('get session', sessionId);
@@ -25,13 +27,34 @@
 	};
 
 	onMount(() => getSession());
-
 </script>
 
 <div>
 	{#if sessionValue}
+		<div>
+			{#if !sessionValue.config.isBouncing}
+				<div class="alert alert-info rounded-none shadow-lg">
+					<div>
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							fill="none"
+							viewBox="0 0 24 24"
+							class="stroke-current flex-shrink-0 w-6 h-6"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+							/></svg
+						>
+						<span>Waiting for the therapist to start...</span>
+					</div>
+				</div>
+			{/if}
+		</div>
 		<main
-			class="w-screen h-screen flex flex-row align-middle items-center {sessionValue.config.isBouncing
+			class="w-screen h-screen flex flex-row align-middle items-center {sessionValue.config
+				.isBouncing
 				? ''
 				: 'justify-center'} bg-gray-1000"
 			style="--bg-color: {sessionValue.config.bgColor}; --animation-speed:{animationSpeed};"
@@ -39,7 +62,9 @@
 			<div class="{sessionValue.config.isBouncing ? 'bounce' : ''} ball w-20 h-20 rounded-full" />
 		</main>
 	{:else}
-		<p>Loading...</p>
+		<div class="flex flex-col items-center justify-center w-screen h-screen">
+			<p>Loading...</p>
+		</div>
 	{/if}
 </div>
 

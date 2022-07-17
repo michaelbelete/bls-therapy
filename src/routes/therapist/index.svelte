@@ -4,9 +4,6 @@
 	import { sessionStore } from '../../store/session';
 	import sessionValue from '$lib/getSessionValue';
 
-	// if (sessionValue) {
-	// 	goto(`/therapist/session/${sessionValue.sessionId}`);
-	// }
 
 	const createSession = () => {
 		socket.emit('create session');
